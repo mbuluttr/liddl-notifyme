@@ -12,13 +12,14 @@ interface ThemeContextProps {
 export const ThemeContext = createContext<ThemeContextProps>({} as ThemeContextProps);
 
 const ThemeProvider = ({ children }: { children: ReactChild }) => {
-  const [theme, setTheme] = useState('');
-  const themeColor = colors[theme as ThemeTypes];
+  const [theme, setTheme] = useState('gold');
+  const [themeColor, setThemeColor] = useState<Theme>(colors.gold);
 
   useEffect(() => {
     const getStoragedTheme = async () => {
       const storaged = await AsyncStorage.getItem('@theme');
-      setTheme(storaged ? storaged : 'light');
+      setTheme(storaged ? storaged : 'gold');
+      setThemeColor(storaged ? colors[storaged as ThemeTypes] : colors.gold);
     };
 
     getStoragedTheme();
@@ -30,16 +31,17 @@ const ThemeProvider = ({ children }: { children: ReactChild }) => {
 
   const changeTheme = useCallback((newColorSet: ThemeTypes) => {
     setTheme(newColorSet);
+    setThemeColor(colors[newColorSet]);
     changeStoragedTheme(newColorSet);
   }, []);
 
   const ThemeContextValues = useMemo(
     () => ({
-      themeColor,
       theme,
+      themeColor,
       changeTheme,
     }),
-    [themeColor, theme, changeTheme],
+    [theme, themeColor, changeTheme],
   );
 
   return <ThemeContext.Provider value={ThemeContextValues}>{children}</ThemeContext.Provider>;

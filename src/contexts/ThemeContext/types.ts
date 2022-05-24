@@ -1,4 +1,4 @@
-export type ThemeTypes = 'light' | 'dark';
+export type ThemeTypes = 'light' | 'dark' | 'blue' | 'green' | 'gold';
 
 export type Theme = {
   background: string;
@@ -9,11 +9,11 @@ export type Theme = {
   nonCompletedSquare: string;
   completedSquare: string;
   completedSquareCheck: string;
-  stepNonCompletedCircleOuter: string;
-  stepNonCompletedCircleInner: string;
-  stepCompletedCheck: string;
-  floatButton: string;
-  floatButtonIcon: string;
+  circleOuter: string;
+  circleInner: string;
+  stepCheck: string;
+  button: string;
+  buttonIcon: string;
   input: string;
 };
 
