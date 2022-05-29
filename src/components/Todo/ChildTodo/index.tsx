@@ -7,7 +7,7 @@ import { TodoType } from '../../../screens/Todos/types';
 
 type ChildTodoProps = {
   item: TodoType;
-  onCompleteTodo: (id: string) => void;
+  onCompleteTodo: (_id: string) => void;
 };
 
 const ChildTodoItem = ({ item, onCompleteTodo }: ChildTodoProps) => {
@@ -22,8 +22,8 @@ const ChildTodoItem = ({ item, onCompleteTodo }: ChildTodoProps) => {
             backgroundColor: themeColor.subStepSection,
           },
         ]}
+        onPress={() => onCompleteTodo(item._id)}
         activeOpacity={0.8}
-        onPress={() => onCompleteTodo(item.id)}
       >
         <View style={styles.leftContainer}>
           {item.completed ? (

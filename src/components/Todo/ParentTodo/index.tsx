@@ -8,10 +8,11 @@ import ChildTodoItem from '../ChildTodo';
 
 type ParentTodoProps = {
   item: ParentTodoType;
-  onCompleteTodo: (id: string) => void;
+  onCompleteTodo: (_id: string) => void;
+  onEditTodo: (_id: string) => void;
 };
 
-const ParentTodoItem = ({ item, onCompleteTodo }: ParentTodoProps) => {
+const ParentTodoItem = ({ item, onCompleteTodo, onEditTodo }: ParentTodoProps) => {
   const { themeColor } = useTheme();
 
   return (
@@ -24,7 +25,8 @@ const ParentTodoItem = ({ item, onCompleteTodo }: ParentTodoProps) => {
           },
         ]}
         activeOpacity={0.8}
-        onPress={() => onCompleteTodo(item.id)}
+        onPress={() => onCompleteTodo(item._id)}
+        onLongPress={() => onEditTodo(item._id)}
       >
         <View style={styles.leftContainer}>
           {item.completed ? (
@@ -50,7 +52,7 @@ const ParentTodoItem = ({ item, onCompleteTodo }: ParentTodoProps) => {
       </TouchableOpacity>
 
       {item.subSteps.map((subStep) => (
-        <ChildTodoItem item={subStep} key={subStep.id} onCompleteTodo={onCompleteTodo} />
+        <ChildTodoItem item={subStep} key={subStep._id} onCompleteTodo={onCompleteTodo} />
       ))}
     </View>
   );
