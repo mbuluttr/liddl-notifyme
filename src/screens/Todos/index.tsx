@@ -8,6 +8,7 @@ import FloatButton from '../../components/FloatButton';
 import { ParentTodoType } from './types';
 import { ParentTodoItem } from '../../components/Todo';
 import TodoCreateAndUpdateModal from './components/TodoCreateAndUpdateModal';
+import NotificationHelper from '../../helpers/NotificationHelper';
 
 const Todos = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,6 +21,11 @@ const Todos = () => {
       item.subSteps = item.subSteps.filter((step) => step.text);
       setTodos([...todos, item]);
       setIsVisible(false);
+    }
+
+    if (item.notification.isEnabled) {
+      NotificationHelper.onCreateNormalNotification(item);
+      //NotificationHelper.onCreateTriggerNotification(item);
     }
   };
 

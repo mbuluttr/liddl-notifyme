@@ -19,18 +19,17 @@ const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpda
     text: '',
     completed: false,
     subSteps: [],
+    notification: {
+      isEnabled: false,
+      hour: 1,
+      repeatedly: false,
+    },
   });
   const [openNotification, setOpenNotification] = useState(false);
   const [repeatedly, setRepeatedly] = useState(false);
   const [reminderHour, setReminderHour] = useState(1);
 
   const { themeColor } = useTheme();
-
-  const onReminderHour = (type: 'plus' | 'minus') => {
-    type === 'minus' && reminderHour > 1
-      ? setReminderHour(reminderHour - 1)
-      : type === 'plus' && setReminderHour(reminderHour + 1);
-  };
 
   const onAddSubStep = () => {
     setTodo((prevState) => {
@@ -65,6 +64,44 @@ const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpda
     });
   };
 
+  const onReminderHourChange = (value: number) => {
+    if (value < 1) {
+      return;
+    }
+
+    setReminderHour(value);
+
+    setTodo((prevState) => ({
+      ...prevState,
+      notification: {
+        ...prevState.notification,
+        hour: value,
+      },
+    }));
+  };
+
+  const onNotificationValueChange = (value: boolean) => {
+    setOpenNotification(value);
+    setTodo((prevState) => ({
+      ...prevState,
+      notification: {
+        ...prevState.notification,
+        isEnabled: value,
+      },
+    }));
+  };
+
+  const onRepeatedlyChange = (value: boolean) => {
+    setRepeatedly(value);
+    setTodo((prevState) => ({
+      ...prevState,
+      notification: {
+        ...prevState.notification,
+        repeatedly: value,
+      },
+    }));
+  };
+
   return (
     <AppModal onClose={onCloseModal}>
       <AddTodoInput
@@ -91,52 +128,50 @@ const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpda
           trackColor={{ false: themeColor.subStepSection, true: themeColor.subStepSection }}
           thumbColor={themeColor.text}
           ios_backgroundColor={themeColor.subStepSection}
-          onValueChange={() => {
-            setOpenNotification(!openNotification);
-            setRepeatedly(false);
-            setReminderHour(1);
-          }}
+          onValueChange={onNotificationValueChange}
           value={openNotification}
         />
       </View>
       {openNotification && (
-        <View style={styles.reminderContainer}>
-          <Text style={[styles.reminderText, { color: themeColor.text }]}>Remind me in</Text>
-          <View style={styles.spinnerContainer}>
-            <TouchableOpacity
-              style={[styles.spinnerLeftButtonContainer, { backgroundColor: themeColor.button }]}
-              activeOpacity={0.8}
-              onPress={() => onReminderHour('minus')}
-            >
-              <AntDesign name="minus" size={24} color={themeColor.buttonIcon} />
-            </TouchableOpacity>
-            <View style={styles.spinnerTextContainer}>
-              <Text style={[styles.spinnerText, { color: themeColor.text }]}>{reminderHour}h</Text>
+        <View>
+          <View style={styles.reminderContainer}>
+            <Text style={[styles.reminderText, { color: themeColor.text }]}>Remind me in</Text>
+            <View style={styles.spinnerContainer}>
+              <TouchableOpacity
+                style={[styles.spinnerLeftButtonContainer, { backgroundColor: themeColor.button }]}
+                activeOpacity={0.8}
+                onPress={() => onReminderHourChange(reminderHour - 1)}
+              >
+                <AntDesign name="minus" size={24} color={themeColor.buttonIcon} />
+              </TouchableOpacity>
+              <View style={styles.spinnerTextContainer}>
+                <Text style={[styles.spinnerText, { color: themeColor.text }]}>{reminderHour}h</Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.spinnerRightButtonContainer, { backgroundColor: themeColor.button }]}
+                activeOpacity={0.8}
+                onPress={() => onReminderHourChange(reminderHour + 1)}
+              >
+                <AntDesign name="plus" size={24} color={themeColor.buttonIcon} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={[styles.spinnerRightButtonContainer, { backgroundColor: themeColor.button }]}
-              activeOpacity={0.8}
-              onPress={() => onReminderHour('plus')}
-            >
-              <AntDesign name="plus" size={24} color={themeColor.buttonIcon} />
-            </TouchableOpacity>
+          </View>
+
+          <View style={styles.switchContainer}>
+            <Text style={[styles.notificationInfoText, { color: themeColor.text }]}>
+              Repeatedly {repeatedly ? 'ON' : 'OFF'}
+            </Text>
+            <Switch
+              trackColor={{ false: themeColor.subStepSection, true: themeColor.subStepSection }}
+              thumbColor={themeColor.text}
+              ios_backgroundColor={themeColor.subStepSection}
+              onValueChange={onRepeatedlyChange}
+              value={repeatedly}
+            />
           </View>
         </View>
       )}
-      {openNotification && (
-        <View style={styles.switchContainer}>
-          <Text style={[styles.notificationInfoText, { color: themeColor.text }]}>
-            Repeatedly {repeatedly ? 'ON' : 'OFF'}
-          </Text>
-          <Switch
-            trackColor={{ false: themeColor.subStepSection, true: themeColor.subStepSection }}
-            thumbColor={themeColor.text}
-            ios_backgroundColor={themeColor.subStepSection}
-            onValueChange={() => setRepeatedly(!repeatedly)}
-            value={repeatedly}
-          />
-        </View>
-      )}
+
       <View style={styles.bottomButtonContainer}>
         <TouchableOpacity
           style={[styles.button, { borderWidth: 1, borderColor: themeColor.button }]}
