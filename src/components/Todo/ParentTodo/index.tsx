@@ -9,10 +9,10 @@ import ChildTodoItem from '../ChildTodo';
 type ParentTodoProps = {
   item: ParentTodoType;
   onCompleteTodo: (_id: string) => void;
-  onEditTodo: (_id: string) => void;
+  onParentTodoLongPress: (_id: string) => void;
 };
 
-const ParentTodoItem = ({ item, onCompleteTodo, onEditTodo }: ParentTodoProps) => {
+const ParentTodoItem = ({ item, onCompleteTodo, onParentTodoLongPress }: ParentTodoProps) => {
   const { themeColor } = useTheme();
 
   return (
@@ -26,7 +26,7 @@ const ParentTodoItem = ({ item, onCompleteTodo, onEditTodo }: ParentTodoProps) =
         ]}
         activeOpacity={0.8}
         onPress={() => onCompleteTodo(item._id)}
-        onLongPress={() => onEditTodo(item._id)}
+        onLongPress={() => onParentTodoLongPress(item._id)}
       >
         <View style={styles.leftContainer}>
           {item.completed ? (

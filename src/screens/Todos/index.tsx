@@ -13,6 +13,7 @@ import NotificationHelper from '../../helpers/NotificationHelper';
 const Todos = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [todos, setTodos] = useState<ParentTodoType[]>([]);
+  const [selectedParent, setSelectedParent] = useState<ParentTodoType | null>(null);
 
   const { themeColor } = useTheme();
 
@@ -25,7 +26,32 @@ const Todos = () => {
 
     if (item.notification.isEnabled) {
       NotificationHelper.onCreateNormalNotification(item);
-      //NotificationHelper.onCreateTriggerNotification(item);
+      NotificationHelper.onCreateTriggerNotification(item);
+    }
+  };
+
+  const onUpdateTodo = (item: ParentTodoType) => {
+    if (item.text) {
+      item.subSteps = item.subSteps.filter((step) => step.text);
+      setTodos(todos.map((todo) => (todo._id === item._id ? item : todo)));
+      setIsVisible(false);
+      setSelectedParent(null);
+    }
+
+    if (item.notification.isEnabled) {
+      NotificationHelper.onCreateNormalNotification(item);
+      NotificationHelper.onCreateTriggerNotification(item);
+    } else {
+      NotificationHelper.onCancelNotification(item._id);
+    }
+  };
+
+  const onParentTodoLongPress = (_id: string) => {
+    const item = todos.find((todo) => todo._id === _id);
+
+    if (item) {
+      setSelectedParent(item);
+      setIsVisible(true);
     }
   };
 
@@ -62,18 +88,31 @@ const Todos = () => {
     });
   };
 
-  const onEditTodo = () => {};
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: themeColor.background }]}>
       <Header />
       <ScrollView style={{ paddingTop: 16 }}>
         {todos.map((item) => (
-          <ParentTodoItem key={item._id} item={item} onCompleteTodo={onCompleteTodo} onEditTodo={onEditTodo} />
+          <ParentTodoItem
+            key={item._id}
+            item={item}
+            onCompleteTodo={onCompleteTodo}
+            onParentTodoLongPress={onParentTodoLongPress}
+          />
         ))}
       </ScrollView>
       <FloatButton onPress={() => setIsVisible(!isVisible)} />
-      {isVisible && <TodoCreateAndUpdateModal onCloseModal={() => setIsVisible(false)} onAddTodo={onAddTodo} />}
+      {isVisible && (
+        <TodoCreateAndUpdateModal
+          onCloseModal={() => {
+            setIsVisible(false);
+            setSelectedParent(null);
+          }}
+          onAddTodo={onAddTodo}
+          onUpdateTodo={onUpdateTodo}
+          selectedParent={selectedParent}
+        />
+      )}
     </SafeAreaView>
   );
 };

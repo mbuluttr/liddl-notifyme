@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
   },
   button: {
     height: 46,
-    width: 120,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 6,
@@ -71,5 +71,6 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
