@@ -6,13 +6,12 @@ import notifee, {
   TriggerType,
 } from '@notifee/react-native';
 import { ParentTodoType } from '../screens/Todos/types';
-import { v4 as uuidv4 } from 'uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class NotificationHelper {
   channelId: string = 'default';
 
-  private async createChannel() {
+  private createChannel = async () => {
     const channel = await AsyncStorage.getItem('@channel');
     this.channelId = channel || 'default';
 
@@ -23,13 +22,13 @@ class NotificationHelper {
       lights: true,
       vibration: true,
     });
-  }
+  };
 
   onCreateNormalNotification = async (todo: ParentTodoType) => {
     await this.createChannel();
 
     const notification: Notification = {
-      id: uuidv4(),
+      id: todo._id,
       body: `Notification will show in ${todo.notification.hour} hour(s). Repeatedly: ${
         todo.notification.repeatedly ? 'ON' : 'OFF'
       }`,
@@ -41,7 +40,7 @@ class NotificationHelper {
     await notifee.displayNotification(notification);
   };
 
-  async onCreateTriggerNotification(todo: ParentTodoType) {
+  onCreateTriggerNotification = async (todo: ParentTodoType) => {
     await this.createChannel();
 
     const trigger: TimestampTrigger = {
@@ -60,9 +59,18 @@ class NotificationHelper {
     };
 
     await notifee.createTriggerNotification(notification, trigger);
-  }
+  };
 
-  async requestUserPermission() {
+  onCancelNotification = async (_id: string) => {
+    const ids = await notifee.getTriggerNotificationIds();
+
+    if (ids.includes(_id)) {
+      console.log('Notification cancalled: ', _id);
+      await notifee.cancelNotification(_id);
+    }
+  };
+
+  requestUserPermission = async () => {
     const settings = await notifee.requestPermission({
       sound: true,
       announcement: true,
@@ -74,7 +82,7 @@ class NotificationHelper {
     } else if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
       console.log('Notification permissions has been denied');
     }
-  }
+  };
 }
 
 export default new NotificationHelper();
