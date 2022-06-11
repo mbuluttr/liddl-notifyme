@@ -11,6 +11,7 @@ type AddTodoInputProps = {
   onChangeInput: (text: string, id: string) => void;
   onAddSubStep?: () => void;
   onRemoveSubStep?: (id: string) => void;
+  defaultValue?: string;
 };
 
 const AddTodoInput = ({
@@ -20,6 +21,7 @@ const AddTodoInput = ({
   onAddSubStep,
   onRemoveSubStep,
   lastItem,
+  defaultValue,
 }: AddTodoInputProps) => {
   const { themeColor } = useTheme();
 
@@ -49,6 +51,7 @@ const AddTodoInput = ({
         onChangeText={(text) => onChangeInput(text, todoId)}
         placeholder={substep ? 'Add a step' : 'Add a todo'}
         placeholderTextColor={themeColor.text}
+        defaultValue={defaultValue}
       />
 
       {onAddSubStep && (

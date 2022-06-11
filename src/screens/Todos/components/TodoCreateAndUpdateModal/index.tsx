@@ -11,23 +11,30 @@ import { styles } from './styles';
 type TodoCreateAndUpdateModalProps = {
   onCloseModal: () => void;
   onAddTodo: (item: ParentTodoType) => void;
+  onUpdateTodo: (item: ParentTodoType) => void;
+  selectedParent: ParentTodoType | null;
 };
 
-const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpdateModalProps) => {
+const TodoCreateAndUpdateModal = ({
+  onCloseModal,
+  onAddTodo,
+  onUpdateTodo,
+  selectedParent,
+}: TodoCreateAndUpdateModalProps) => {
   const [todo, setTodo] = useState<ParentTodoType>({
-    _id: uuidv4(),
-    text: '',
-    completed: false,
-    subSteps: [],
-    notification: {
+    _id: selectedParent?._id || uuidv4(),
+    text: selectedParent?.text || '',
+    completed: selectedParent?.completed || false,
+    subSteps: selectedParent?.subSteps || [],
+    notification: selectedParent?.notification || {
       isEnabled: false,
       hour: 1,
       repeatedly: false,
     },
   });
-  const [openNotification, setOpenNotification] = useState(false);
-  const [repeatedly, setRepeatedly] = useState(false);
-  const [reminderHour, setReminderHour] = useState(1);
+  const [openNotification, setOpenNotification] = useState(selectedParent?.notification.isEnabled || false);
+  const [repeatedly, setRepeatedly] = useState(selectedParent?.notification.repeatedly || false);
+  const [reminderHour, setReminderHour] = useState(selectedParent?.notification.hour || 1);
 
   const { themeColor } = useTheme();
 
@@ -109,6 +116,7 @@ const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpda
         todoId={todo._id}
         onChangeInput={onChangeInput}
         lastItem={todo.subSteps.length === 0}
+        defaultValue={selectedParent?.text}
       />
       {todo.subSteps.map((item, index) => (
         <AddTodoInput
@@ -118,6 +126,7 @@ const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpda
           onRemoveSubStep={onRemoveSubStep}
           substep={true}
           lastItem={index === todo.subSteps.length - 1}
+          defaultValue={selectedParent?.subSteps[index]?.text}
         />
       ))}
       <View style={styles.switchContainer}>
@@ -183,9 +192,17 @@ const TodoCreateAndUpdateModal = ({ onCloseModal, onAddTodo }: TodoCreateAndUpda
         <TouchableOpacity
           style={[styles.button, { backgroundColor: themeColor.button }]}
           activeOpacity={0.8}
-          onPress={() => onAddTodo(todo)}
+          onPress={() => {
+            if (selectedParent) {
+              onUpdateTodo(todo);
+            } else {
+              onAddTodo(todo);
+            }
+          }}
         >
-          <Text style={[styles.buttonText, { color: themeColor.buttonIcon }]}>Add Todo</Text>
+          <Text style={[styles.buttonText, { color: themeColor.buttonIcon }]}>
+            {selectedParent ? 'Update Todo' : 'Add Todo'}
+          </Text>
         </TouchableOpacity>
       </View>
     </AppModal>
