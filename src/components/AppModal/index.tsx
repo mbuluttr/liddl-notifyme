@@ -51,7 +51,7 @@ const AppModal = ({ children, onClose }: AppModalProps) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'always'}
           scrollEventThrottle={16}
-          contentContainerStyle={{ paddingBottom: 75 }}
+          contentContainerStyle={{ paddingBottom: 25 }}
         >
           {children}
         </ScrollView>
