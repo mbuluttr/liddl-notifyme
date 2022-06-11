@@ -1,54 +1,40 @@
 import notifee, {
-  AndroidImportance,
-  AndroidVisibility,
   AuthorizationStatus,
+  Notification,
   RepeatFrequency,
   TimestampTrigger,
   TriggerType,
 } from '@notifee/react-native';
 import { ParentTodoType } from '../screens/Todos/types';
 import { v4 as uuidv4 } from 'uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class NotificationHelper {
-  async requestUserPermission() {
-    const settings = await notifee.requestPermission({
-      sound: true,
-      announcement: true,
-      criticalAlert: true,
-    });
-
-    if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
-      console.log('Notification permissions has been authorized');
-    } else if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
-      console.log('Notification permissions has been denied');
-    }
-  }
+  channelId: string = 'default';
 
   private async createChannel() {
+    const channel = await AsyncStorage.getItem('@channel');
+    this.channelId = channel || 'default';
+
     await notifee.createChannel({
-      id: 'default',
-      name: 'default',
-      importance: AndroidImportance.DEFAULT,
-      visibility: AndroidVisibility.PRIVATE,
+      id: this.channelId,
+      name: 'Notify me | Channel: ' + this.channelId,
+      sound: this.channelId,
+      lights: true,
       vibration: true,
-      sound: 'default',
     });
   }
 
   onCreateNormalNotification = async (todo: ParentTodoType) => {
-    this.createChannel();
+    await this.createChannel();
 
-    const notification = {
+    const notification: Notification = {
       id: uuidv4(),
       body: `Notification will show in ${todo.notification.hour} hour(s). Repeatedly: ${
         todo.notification.repeatedly ? 'ON' : 'OFF'
       }`,
       android: {
-        channelId: 'default',
-        sound: 'default',
-      },
-      ios: {
-        sound: 'default',
+        channelId: this.channelId,
       },
     };
 
@@ -64,20 +50,30 @@ class NotificationHelper {
       repeatFrequency: todo.notification.repeatedly ? RepeatFrequency.HOURLY : RepeatFrequency.NONE,
     };
 
-    const notification = {
+    const notification: Notification = {
       id: todo._id,
       title: 'Notify me | Time to do it!',
       body: todo.text,
       android: {
-        channelId: 'default',
-        sound: 'default',
-      },
-      ios: {
-        sound: 'default',
+        channelId: this.channelId,
       },
     };
 
     await notifee.createTriggerNotification(notification, trigger);
+  }
+
+  async requestUserPermission() {
+    const settings = await notifee.requestPermission({
+      sound: true,
+      announcement: true,
+      criticalAlert: true,
+    });
+
+    if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
+      console.log('Notification permissions has been authorized');
+    } else if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
+      console.log('Notification permissions has been denied');
+    }
   }
 }
 
