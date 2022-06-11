@@ -116,7 +116,7 @@ const TodoCreateAndUpdateModal = ({
         todoId={todo._id}
         onChangeInput={onChangeInput}
         lastItem={todo.subSteps.length === 0}
-        defaultValue={selectedParent?.text}
+        defaultValue={todo.text}
       />
       {todo.subSteps.map((item, index) => (
         <AddTodoInput
@@ -126,7 +126,7 @@ const TodoCreateAndUpdateModal = ({
           onRemoveSubStep={onRemoveSubStep}
           substep={true}
           lastItem={index === todo.subSteps.length - 1}
-          defaultValue={selectedParent?.subSteps[index]?.text}
+          defaultValue={todo.subSteps[index].text}
         />
       ))}
       <View style={styles.switchContainer}>
