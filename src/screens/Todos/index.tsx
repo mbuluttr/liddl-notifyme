@@ -90,7 +90,7 @@ const Todos = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: themeColor.background }]}>
-      <Header />
+      <Header title={'notify.me'} />
       <ScrollView style={{ paddingTop: 16 }}>
         {todos.map((item) => (
           <ParentTodoItem

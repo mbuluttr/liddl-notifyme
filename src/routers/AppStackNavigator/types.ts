@@ -1,7 +1,9 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type AppStackParamList = {
   Todos: undefined;
+  Notifications: undefined;
+  Settings: undefined;
 };
 
-export type TodosScreenProps = NativeStackScreenProps<AppStackParamList, 'Todos'>;
+export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>;
