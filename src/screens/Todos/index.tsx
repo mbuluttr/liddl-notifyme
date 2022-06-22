@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native';
 import FloatButton from '../../components/FloatButton';
 import { ParentTodoType } from './types';
 import { ParentTodoItem } from '../../components/Todo';
-import TodoCreateAndUpdateModal from './components/TodoCreateAndUpdateModal';
+import TodoCreateAndUpdateModal from '../../components/TodoCreateAndUpdateModal';
 import NotificationHelper from '../../helpers/NotificationHelper';
 
 const Todos = () => {

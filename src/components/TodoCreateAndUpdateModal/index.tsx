@@ -2,10 +2,10 @@ import { View, Text, Switch, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { v4 as uuidv4 } from 'uuid';
-import AppModal from '../../../../components/AppModal';
-import AddTodoInput from '../../../../components/AddTodoInput';
-import { ParentTodoType } from '../../types';
-import { useTheme } from '../../../../contexts/ThemeContext';
+import AppModal from '../AppModal';
+import AddTodoInput from '../AddTodoInput';
+import { ParentTodoType } from '../../screens/Todos/types';
+import { useTheme } from '../../contexts/ThemeContext';
 import { styles } from './styles';
 
 type TodoCreateAndUpdateModalProps = {
