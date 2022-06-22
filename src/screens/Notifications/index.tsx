@@ -10,7 +10,7 @@ const Notifications = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: themeColor.background }]}>
-      <Header title={'notifications'} />
+      <Header title={'notifications'} canGoBack={true} />
       <Text>Notifications</Text>
     </SafeAreaView>
   );

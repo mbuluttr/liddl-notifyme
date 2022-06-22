@@ -8,9 +8,10 @@ import { AppStackNavigationProp } from '../../routers/AppStackNavigator/types';
 
 interface HeaderProps {
   title: string;
+  canGoBack: boolean;
 }
 
-const Header = ({ title }: HeaderProps) => {
+const Header = ({ title, canGoBack }: HeaderProps) => {
   const { theme, themeColor } = useTheme();
   const navigation = useNavigation<AppStackNavigationProp>();
 
@@ -21,7 +22,7 @@ const Header = ({ title }: HeaderProps) => {
         backgroundColor={themeColor.background}
       />
       <View style={styles.titleContainer}>
-        {navigation.canGoBack() && (
+        {canGoBack && (
           <TouchableOpacity style={styles.backIcon} activeOpacity={0.8} onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={32} color={themeColor.button} />
           </TouchableOpacity>
@@ -29,7 +30,7 @@ const Header = ({ title }: HeaderProps) => {
         <Text style={[styles.title, { color: themeColor.title }]}>{title}</Text>
       </View>
 
-      {!navigation.canGoBack() && (
+      {!canGoBack && (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.notificationsButton}
