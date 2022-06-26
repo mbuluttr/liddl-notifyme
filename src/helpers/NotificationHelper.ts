@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class NotificationHelper {
   channelId: string = 'default';
 
-  private createChannel = async () => {
+  private createChannel = async (): Promise<void> => {
     const channel = await AsyncStorage.getItem('@channel');
     this.channelId = channel || 'default';
 
@@ -24,7 +24,7 @@ class NotificationHelper {
     });
   };
 
-  onCreateNormalNotification = async (todo: ParentTodoType) => {
+  createNormalNotification = async (todo: ParentTodoType): Promise<void> => {
     await this.createChannel();
 
     const notification: Notification = {
@@ -40,7 +40,7 @@ class NotificationHelper {
     await notifee.displayNotification(notification);
   };
 
-  onCreateTriggerNotification = async (todo: ParentTodoType) => {
+  createTriggerNotification = async (todo: ParentTodoType): Promise<void> => {
     await this.createChannel();
 
     const trigger: TimestampTrigger = {
@@ -61,7 +61,7 @@ class NotificationHelper {
     await notifee.createTriggerNotification(notification, trigger);
   };
 
-  onCancelNotification = async (_id: string) => {
+  cancelNotification = async (_id: string): Promise<void> => {
     const ids = await notifee.getTriggerNotificationIds();
 
     if (ids.includes(_id)) {
@@ -70,7 +70,11 @@ class NotificationHelper {
     }
   };
 
-  requestUserPermission = async () => {
+  getScheduledNotificationIds = async (): Promise<string[]> => {
+    return await notifee.getTriggerNotificationIds();
+  };
+
+  requestUserPermission = async (): Promise<void> => {
     const settings = await notifee.requestPermission({
       sound: true,
       announcement: true,

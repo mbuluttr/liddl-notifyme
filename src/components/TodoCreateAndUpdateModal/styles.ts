@@ -55,10 +55,11 @@ export const styles = StyleSheet.create({
   spinnerText: {
     fontSize: 20,
   },
-
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 20,
   },
   button: {
     height: 46,

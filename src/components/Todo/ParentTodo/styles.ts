@@ -29,4 +29,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 12,
   },
+  deleteButton: {
+    marginLeft: 12,
+  },
 });

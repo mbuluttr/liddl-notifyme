@@ -26,8 +26,8 @@ const Settings = () => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: themeColor.background }]}>
       <Header title={'settings'} canGoBack={true} />
-      <View style={[styles.changeContainer, { backgroundColor: themeColor.subStepSection }]}>
-        <Text style={[styles.changeText, { color: themeColor.title }]}>Theme</Text>
+      <View style={[styles.sectionContainer, { backgroundColor: themeColor.subStepSection }]}>
+        <Text style={[styles.sectionTitle, { color: themeColor.title }]}>Theme</Text>
         <View style={styles.themesContainer}>{themes.map((theme) => renderThemeCircle(theme))}</View>
       </View>
     </SafeAreaView>

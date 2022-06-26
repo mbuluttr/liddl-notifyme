@@ -25,8 +25,8 @@ const Todos = () => {
     }
 
     if (item.notification.isEnabled) {
-      NotificationHelper.onCreateNormalNotification(item);
-      NotificationHelper.onCreateTriggerNotification(item);
+      NotificationHelper.createNormalNotification(item);
+      NotificationHelper.createTriggerNotification(item);
     }
   };
 
@@ -39,10 +39,10 @@ const Todos = () => {
     }
 
     if (item.notification.isEnabled) {
-      NotificationHelper.onCreateNormalNotification(item);
-      NotificationHelper.onCreateTriggerNotification(item);
+      NotificationHelper.createNormalNotification(item);
+      NotificationHelper.createTriggerNotification(item);
     } else {
-      NotificationHelper.onCancelNotification(item._id);
+      NotificationHelper.cancelNotification(item._id);
     }
   };
 
@@ -88,6 +88,11 @@ const Todos = () => {
     });
   };
 
+  const onDeleteTodo = (_id: string) => {
+    setTodos((prevState) => prevState.filter((item) => item._id !== _id));
+    NotificationHelper.cancelNotification(_id);
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: themeColor.background }]}>
       <Header title={'notify.me'} canGoBack={false} />
@@ -98,6 +103,7 @@ const Todos = () => {
             item={item}
             onCompleteTodo={onCompleteTodo}
             onParentTodoLongPress={onParentTodoLongPress}
+            onDeleteTodo={onDeleteTodo}
           />
         ))}
       </ScrollView>
