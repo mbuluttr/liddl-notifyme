@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './styles';
@@ -9,6 +9,7 @@ import { ParentTodoType } from './types';
 import { ParentTodoItem } from '../../components/Todo';
 import TodoCreateAndUpdateModal from '../../components/TodoCreateAndUpdateModal';
 import NotificationHelper from '../../helpers/NotificationHelper';
+import StorageHelper from '../../helpers/StorageHelper';
 
 const Todos = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -17,10 +18,22 @@ const Todos = () => {
 
   const { themeColor } = useTheme();
 
-  const onAddTodo = (item: ParentTodoType) => {
+  useEffect(() => {
+    const getStoragedTodos = async () => {
+      const storagedTodos = await StorageHelper.getStoragedData('@todos');
+      if (storagedTodos) {
+        setTodos(storagedTodos);
+      }
+    };
+
+    getStoragedTodos();
+  }, []);
+
+  const onAddTodo = async (item: ParentTodoType) => {
     if (item.text) {
       item.subSteps = item.subSteps.filter((step) => step.text);
       setTodos([...todos, item]);
+      await StorageHelper.setStoragedData('@todos', [...todos, item]);
       setIsVisible(false);
     }
 
@@ -30,10 +43,16 @@ const Todos = () => {
     }
   };
 
-  const onUpdateTodo = (item: ParentTodoType) => {
+  const onUpdateTodo = async (item: ParentTodoType) => {
     if (item.text) {
       item.subSteps = item.subSteps.filter((step) => step.text);
       setTodos(todos.map((todo) => (todo._id === item._id ? item : todo)));
+
+      await StorageHelper.setStoragedData(
+        '@todos',
+        todos.map((todo) => (todo._id === item._id ? item : todo)),
+      );
+
       setIsVisible(false);
       setSelectedParent(null);
     }
@@ -88,8 +107,13 @@ const Todos = () => {
     });
   };
 
-  const onDeleteTodo = (_id: string) => {
+  const onDeleteTodo = async (_id: string) => {
     setTodos((prevState) => prevState.filter((item) => item._id !== _id));
+    await StorageHelper.setStoragedData(
+      '@todos',
+      todos.filter((item) => item._id !== _id),
+    );
+
     NotificationHelper.cancelNotification(_id);
   };
 
