@@ -14,7 +14,7 @@ import StorageHelper from '../../helpers/StorageHelper';
 const Todos = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [todos, setTodos] = useState<ParentTodoType[]>([]);
-  const [selectedParent, setSelectedParent] = useState<ParentTodoType | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { themeColor } = useTheme();
 
@@ -54,7 +54,7 @@ const Todos = () => {
       );
 
       setIsVisible(false);
-      setSelectedParent(null);
+      setSelectedId(null);
     }
 
     if (item.notification.isEnabled) {
@@ -69,7 +69,7 @@ const Todos = () => {
     const item = todos.find((todo) => todo._id === _id);
 
     if (item) {
-      setSelectedParent(item);
+      setSelectedId(item._id);
       setIsVisible(true);
     }
   };
@@ -136,11 +136,11 @@ const Todos = () => {
         <TodoCreateAndUpdateModal
           onCloseModal={() => {
             setIsVisible(false);
-            setSelectedParent(null);
+            setSelectedId(null);
           }}
           onAddTodo={onAddTodo}
           onUpdateTodo={onUpdateTodo}
-          selectedParent={selectedParent}
+          selectedId={selectedId}
         />
       )}
     </SafeAreaView>

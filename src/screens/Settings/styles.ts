@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   sectionContainer: {
-    paddingVertical: 36,
+    height: 100,
     paddingHorizontal: 24,
     marginTop: 24,
     flexDirection: 'row',
@@ -34,10 +34,10 @@ export const styles = StyleSheet.create({
     width: 20,
     borderRadius: 20,
   },
-  clearAllButton: {
+  clearButton: {
     paddingHorizontal: 20,
     paddingVertical: 9,
-    borderRadius: 5,
+    borderRadius: 6,
   },
   clearButtonText: {
     fontWeight: 'bold',

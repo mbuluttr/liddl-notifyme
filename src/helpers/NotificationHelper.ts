@@ -70,6 +70,10 @@ class NotificationHelper {
     }
   };
 
+  calcelAllNotifications = async (): Promise<void> => {
+    await notifee.cancelAllNotifications();
+  };
+
   getScheduledNotificationIds = async (): Promise<string[]> => {
     return await notifee.getTriggerNotificationIds();
   };

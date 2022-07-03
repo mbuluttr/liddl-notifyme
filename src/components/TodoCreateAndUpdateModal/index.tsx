@@ -1,5 +1,5 @@
 import { View, Text, Switch, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { v4 as uuidv4 } from 'uuid';
 import AppModal from '../AppModal';
@@ -7,36 +7,56 @@ import AddTodoInput from '../AddTodoInput';
 import { ParentTodoType } from '../../screens/Todos/types';
 import { useTheme } from '../../contexts/ThemeContext';
 import { styles } from './styles';
+import StorageHelper from '../../helpers/StorageHelper';
 
 type TodoCreateAndUpdateModalProps = {
   onCloseModal: () => void;
   onAddTodo: (item: ParentTodoType) => void;
   onUpdateTodo: (item: ParentTodoType) => void;
-  selectedParent: ParentTodoType | null;
+  selectedId: string | null;
 };
 
 const TodoCreateAndUpdateModal = ({
   onCloseModal,
   onAddTodo,
   onUpdateTodo,
-  selectedParent,
+  selectedId,
 }: TodoCreateAndUpdateModalProps) => {
   const [todo, setTodo] = useState<ParentTodoType>({
-    _id: selectedParent?._id || uuidv4(),
-    text: selectedParent?.text || '',
-    completed: selectedParent?.completed || false,
-    subSteps: selectedParent?.subSteps || [],
-    notification: selectedParent?.notification || {
+    _id: uuidv4(),
+    text: '',
+    completed: false,
+    subSteps: [],
+    notification: {
       isEnabled: false,
       hour: 1,
       repeatedly: false,
     },
   });
-  const [openNotification, setOpenNotification] = useState(selectedParent?.notification.isEnabled || false);
-  const [repeatedly, setRepeatedly] = useState(selectedParent?.notification.repeatedly || false);
-  const [reminderHour, setReminderHour] = useState(selectedParent?.notification.hour || 1);
+  const [openNotification, setOpenNotification] = useState(false);
+  const [repeatedly, setRepeatedly] = useState(false);
+  const [reminderHour, setReminderHour] = useState(1);
 
   const { themeColor } = useTheme();
+
+  useEffect(() => {
+    const getTodoFromStorage = async () => {
+      const storagedTodos = await StorageHelper.getStoragedData('@todos');
+
+      if (storagedTodos) {
+        const storagedTodo = storagedTodos.find((item) => item._id === selectedId);
+
+        if (storagedTodo) {
+          setTodo(storagedTodo);
+          setOpenNotification(storagedTodo.notification.isEnabled);
+          setRepeatedly(storagedTodo.notification.repeatedly);
+          setReminderHour(storagedTodo.notification.hour);
+        }
+      }
+    };
+
+    getTodoFromStorage();
+  }, [selectedId]);
 
   const onAddSubStep = () => {
     setTodo((prevState) => {
@@ -193,7 +213,7 @@ const TodoCreateAndUpdateModal = ({
           style={[styles.button, { backgroundColor: themeColor.button }]}
           activeOpacity={0.8}
           onPress={() => {
-            if (selectedParent) {
+            if (selectedId) {
               onUpdateTodo(todo);
             } else {
               onAddTodo(todo);
@@ -201,7 +221,7 @@ const TodoCreateAndUpdateModal = ({
           }}
         >
           <Text style={[styles.buttonText, { color: themeColor.buttonIcon }]}>
-            {selectedParent ? 'Update Todo' : 'Add Todo'}
+            {selectedId ? 'Update Todo' : 'Add Todo'}
           </Text>
         </TouchableOpacity>
       </View>
