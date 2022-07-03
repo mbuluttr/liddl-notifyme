@@ -23,20 +23,4 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-  },
-  notificationsButton: {
-    marginRight: 10,
-    height: 50,
-    width: 35,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-  },
-  settingsButton: {
-    height: 50,
-    width: 35,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-  },
 });

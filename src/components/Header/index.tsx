@@ -31,22 +31,13 @@ const Header = ({ title, canGoBack }: HeaderProps) => {
       </View>
 
       {!canGoBack && (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.notificationsButton}
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('Notifications')}
-          >
-            <Ionicons name="notifications-outline" size={28} color={themeColor.button} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.settingsButton}
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('Settings')}
-          >
-            <Ionicons name="settings-outline" size={28} color={themeColor.button} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate('Settings')}
+          hitSlop={{ top: 25, right: 25, left: 25, bottom: 25 }}
+        >
+          <Ionicons name="settings-outline" size={28} color={themeColor.button} />
+        </TouchableOpacity>
       )}
     </View>
   );
