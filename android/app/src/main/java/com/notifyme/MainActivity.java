@@ -1,4 +1,4 @@
-package com.notifyme;
+package com.liddlapp.notifyme;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

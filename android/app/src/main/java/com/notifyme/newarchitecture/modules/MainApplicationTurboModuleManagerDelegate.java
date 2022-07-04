@@ -1,4 +1,4 @@
-package com.notifyme.newarchitecture.modules;
+package com.liddlapp.notifyme.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
