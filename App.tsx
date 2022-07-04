@@ -4,6 +4,7 @@ import ThemeProvider from './src/contexts/ThemeContext';
 import AppStackNavigator from './src/routers/AppStackNavigator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import NotificationHelper from './src/helpers/NotificationHelper';
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   useEffect(() => {
@@ -12,6 +13,10 @@ const App = () => {
     };
 
     getUserPermission();
+  }, []);
+
+  useEffect(() => {
+    SplashScreen.hide();
   }, []);
 
   return (
